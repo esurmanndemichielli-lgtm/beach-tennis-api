@@ -1,7 +1,6 @@
 ﻿from fastapi import APIRouter, UploadFile, File, HTTPException, BackgroundTasks
 import uuid
 import os
-from services.ai_pipeline import process_video
 
 router = APIRouter()
 
@@ -11,10 +10,10 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 jobs = {}
 
 @router.post("/upload")
-async def upload_video(background_tasks: BackgroundTasks, file: UploadFile = File(...)):
+async def upload_video(file: UploadFile = File(...)):
     allowed = ["video/mp4", "video/quicktime", "video/avi"]
     if file.content_type not in allowed:
-        raise HTTPException(status_code=400, detail="Formato invalido. Use MP4, MOV ou AVI.")
+        raise HTTPException(status_code=400, detail="Formato invalido.")
 
     job_id = str(uuid.uuid4())
     filename = job_id + "_" + file.filename
@@ -32,12 +31,9 @@ async def upload_video(background_tasks: BackgroundTasks, file: UploadFile = Fil
         "steps_completed": [],
         "estimated_seconds_remaining": 120,
         "filename": filename,
-        "filepath": filepath,
         "stats": None,
         "error": None,
     }
-
-    background_tasks.add_task(process_video, filepath, job_id, jobs)
 
     return {"job_id": job_id, "message": "Video recebido!", "filename": file.filename}
 
