@@ -4,14 +4,14 @@ from routers import videos, matches, players
 
 app = FastAPI(
     title="Beach Tennis Scout API",
-    description="API para análise automática de partidas de Beach Tennis com IA",
+    description="API para analise automatica de partidas de Beach Tennis com IA",
     version="0.1.0"
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -22,7 +22,7 @@ app.include_router(players.router, prefix="/api/players", tags=["players"])
 
 @app.get("/")
 def root():
-    return {"status": "ok", "message": "Beach Tennis Scout API rodando!"}
+    return {"status": "ok", "message": "API do Beach Tennis Scout rodando!"}
 
 @app.get("/health")
 def health():

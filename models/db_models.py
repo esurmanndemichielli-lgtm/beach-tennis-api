@@ -50,4 +50,5 @@ class VideoJob(Base):
     progress = Column(Float, default=0.0)
     current_step = Column(String, default="Na fila")
     error = Column(Text)
+    stats_json = Column(Text)
     created_at = Column(DateTime, server_default=func.now())
